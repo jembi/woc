@@ -1,0 +1,21 @@
+@(message: String)
+
+@import helper._
+
+@main(title = "Web Ontology Viewer") {
+    
+    <h1>Upload Ontology:</h1>
+    
+    @form(action = routes.Application.uploadFile, 'enctype -> "multipart/form-data") {
+   
+   		<h3><i>@(message)</i></h3>
+   
+	    <input type="file" name="ontology">	    
+	    
+	    <p class="buttons">
+	        <input type="submit">
+	    </p>
+	    
+	}
+    
+}

@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+# Folders to ignore #
+logs
+project/project
+project/target
+target
+tmp

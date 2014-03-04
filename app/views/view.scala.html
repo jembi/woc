@@ -1,0 +1,32 @@
+@(features: List[String])
+
+@import helper._
+
+@main(title = "Web Ontology Viewer") {
+    
+    <h1>Query Ontology:</h1>
+      
+   
+     @form(action = routes.Application.getResults, args = 'id -> "viewform") {  
+      
+		<ul>
+
+		@for(index <- 0 until features.size()){
+		    
+		    <li>
+		    	<input type="checkbox" name="selected" value="@features(index)" > 
+		    	<span>@features(index)</span>
+			</li>
+		
+		}
+		
+		</ul>
+        
+        <p class="buttons">
+            <input type="submit">
+        <p>
+      
+         
+    }
+
+}

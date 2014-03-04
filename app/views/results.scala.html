@@ -1,0 +1,41 @@
+@(selected: List[String], results: List[String])
+
+@import helper._
+
+@main(title = "Web Ontology Viewer") {
+    
+    <h1>Selected Features:</h1>
+      
+ 
+      
+		<ul>
+
+		@for(index <- 0 until selected.size()){
+		    
+		    <li>
+		    	<span>@selected(index)</span>
+			</li>
+		
+		}
+		
+		</ul>
+		
+		    <h1>Results:</h1>
+      
+ 
+      
+		<ul>
+
+		@for(index <- 0 until results.size()){
+		    
+		    <li>
+		    	<span>@results(index)</span>
+			</li>
+		
+		}
+		
+		</ul>
+        
+
+
+}
