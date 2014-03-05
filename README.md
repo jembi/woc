@@ -37,7 +37,7 @@ and run:
 [woc] $ run
 ```
 
-Once running, the application should be accessible locally at [127.0.0.1:9000](127.0.0.1:9000).
+Once running, the application should be accessible locally at [http://127.0.0.1:9000](http://127.0.0.1:9000).
 
 The source code can be edited using any standard text editor, and has also been configured to work as an Eclipse Project using the [Eclipse IDE](https://www.eclipse.org).
 
