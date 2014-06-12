@@ -1,8 +1,8 @@
 package controllers;
 
 import java.io.File;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,12 +12,10 @@ import java.util.Set;
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-
 import play.data.*;
 import static play.data.Form.*;
 import play.data.validation.Constraints.*;
 import play.mvc.Controller;
-
 import views.html.*;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -54,12 +52,13 @@ public class Application extends Controller {
     static ArrayList<String> beeModel = new ArrayList<String>();	     
     static ArrayList<String> CharacterList = new ArrayList<String>();
     static ArrayList<String> BeesList = new ArrayList<String>();
+    public static ArrayList<String> KeyDescriptionArraylist = new ArrayList<String>();
     
     static int charCount;
     static int beeCountnumber;
 	
-    static ArrayList<String> List1Comments;
-    static ArrayList<String> CharacterArraylist;
+    public static ArrayList<String> List1Comments = new ArrayList<String>();
+    public static ArrayList<String> CharacterArraylist = new ArrayList<String>();
 	String Path;
 	
     //Ontology variables declaration
@@ -96,7 +95,7 @@ public class Application extends Controller {
     
     
     public static Result home(){
-    	return ok(index.render(""));
+    	return ok(index.render("woop"));
     }
   
     /**
@@ -127,10 +126,12 @@ public class Application extends Controller {
     	  if (BeeOntologyfile.exists())
     	  {
     		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+    		
+    		System.out.println("suppp");
     		loadBeeCharacteristics();	
     	  }
     	    
-    	  Ontology ontology = new Ontology(CharacterArraylist, null, null);
+    	  Ontology ontology = new Ontology(KeyDescriptionArraylist, null, null);
     	  return ok(view.render(ontology.features));
     	    
     	  } else {
@@ -146,17 +147,30 @@ public class Application extends Controller {
    // public static Result getResults(List<String> selected){
     public static Result getResults() throws OWLOntologyCreationException{
 
+    	
     	//DynamicForm requestData = form().bindFromRequest();
-    	String[] selected = request().body().asFormUrlEncoded().get("selected");
+    	//System.out.println(request().body().asFormUrlEncoded().get("selected"));
+    	String[] selected = request().body().asFormUrlEncoded().get("cars");
     	ArrayList<String> selectedItems = new ArrayList<String>();
+    	selectedItems.clear();
+    	
     	for(int i=0; i< selected.length; i++){
     		selectedItems.add(selected[i]);
     	}
     	
+    	//System.out.println((selectedItems));
+    	//System.out.println(List1Comments.size()); // list with ALL comments
+    	//System.out.println(CharacterArraylist.size());// list key characters
+    	
+    	//System.out.println(KeyDescriptionArraylist.size());//list with COMMENTS which are actual comments and not blank comments
+    	
+    	
     	displayBees(selectedItems);
+    	
     	//ArrayList<String>
     	//String[] selected = params.getAll("selected");
-    	//return ok("Results:"+ beeModel);
+    	///return ok("Results:"+ beeModel);
+    	
     	return ok(results.render(selectedItems,beeModel));
     	
     }
@@ -202,18 +216,19 @@ public class Application extends Controller {
     }
 
     
+    
+    
     public static void loadBeeCharacteristics() throws InterruptedException, OWLOntologyCreationException{
 		//Gets the Key characteristics from the ontology within another method,
 		//LoadKeyCharacteristics() then places them into an arraylist and then into the listmodel
 		//to display on the interface
-		
-			CharacterArraylist = new ArrayList<String>();
+			CharacterArraylist.clear();
 			CharacterArraylist = LoadKeyCharacteristics();
-			ArrayList<String> KeyDescriptionArraylist = new ArrayList<String>();
+			//ArrayList<String> KeyDescriptionArraylist = new ArrayList<String>();
 			//pBar.close();
-			List1Comments = new ArrayList<String>();
-		    
-		   
+			List1Comments.clear();
+		  
+		    KeyDescriptionArraylist.clear();
 			//CharacterArraylist.add("char1"); 
 			// Here we take each element (each KeyCharacteristic) in the characterarraylist
 			// and get the associated comment and then the subproperty of comment 
@@ -253,15 +268,34 @@ public class Application extends Controller {
 			 		comment = renderer.render(commentAnnot.getValue());
 			 		//System.out.println(commentAnnot);
 				}
+			 	
+			 	
+			 	//////////////////////////////
+			 	String S = new String();
+		    	S = comment;
+		    	String newStr = new String();
+		    	if (S.contains("\""))
+				{
+		    		
+					int i = S.indexOf("\"", 2);
+					if (Character.isWhitespace(S.charAt(i-1))) {
+					//int p = S.indexOf(">");
+					S = S.substring(0, i-1);
+					S = S.trim();
+					S = (S + "\"");
+					}
+				}
+		    	//////////////////////////
+			 	
 			 	//add ALL of the annotations to one array List1Comments
 			 	//even the empty annotations
-			 	List1Comments.add(comment);
+			 	List1Comments.add(S);
 			 	
 			 	//Add the not empty comments to another arraylist to sort and to 
 			 	//add to the UI
-			 if (!(comment.isEmpty()))
+			 if (!(S.isEmpty()))
 					 {
-				 KeyDescriptionArraylist.add(comment);
+				 KeyDescriptionArraylist.add(S);
 				//model.addElement(comment);
 			 }
 		
@@ -269,14 +303,17 @@ public class Application extends Controller {
 			
 		//sort the descriptions and then add them to the listbox on the UI
 		Collections.sort(KeyDescriptionArraylist);
+		
+		
+	/*	//ignore
 		for (String keyDesc : KeyDescriptionArraylist)
 		{
-			//model.addElement(keyDesc);
+			//model.addElement(keyDesc); NOT USED
 			model.add(keyDesc);
 		}
 			charCount = (CharacterList.size());
 			//characterCount.setText("" + charCount);
-			
+		*/	
 			//System.out.println(List1Comments);
 			//System.out.println(CharacterArraylist);
 			
@@ -292,6 +329,7 @@ public class Application extends Controller {
 		//to find the bottom level of classes to return
 				
 				ArrayList<String> Characteristics = new ArrayList<String>();
+				Characteristics.clear();
 				//  OntologyLoad OntLoad = new OntologyLoad();
 			      //  OntLoad.LoadOnly();
 	        
@@ -368,7 +406,9 @@ public class Application extends Controller {
 		//	loadingBeesDialog();
 			
 			ArrayList<String> CharacterArraylistSelected = new ArrayList<String>();	
-			ArrayList<String> CharacterArraylistSelected2 = new ArrayList<String>();	
+			ArrayList<String> CharacterArraylistSelected2 = new ArrayList<String>();
+			CharacterArraylistSelected.clear();
+			CharacterArraylistSelected2.clear();
 			
 		/* getUserinfo: Takes all user input selected characteristics and stores in an arraylist
 		* returns the array of characteristics*/
@@ -384,7 +424,7 @@ public class Application extends Controller {
 			/**
 			 * TODO
 			 */
-			/*
+			
 			for (String Keydescription : CharacterArraylistSelected)
 			{
 				//s = ( "\""+Keydescription+"\"");
@@ -392,12 +432,13 @@ public class Application extends Controller {
 				s = CharacterArraylist.get(i);
 				CharacterArraylistSelected2.add(s);
 			}
-			*/
 			
+			//System.out.println(i);
+			//System.out.println(s);
 						
 			//BeeSpecies b = new BeeSpecies();
 			ArrayList<String> BeesArraylist = new ArrayList<String>();
-			
+			BeesArraylist.clear();
 		//findBees(ArrayList<String> info): @param is the arraylist of user selected characteristics
 		//which are used to query the set of bees which have a hasKeyCharacteristic relationship with 
 		//all of them		
@@ -407,7 +448,7 @@ public class Application extends Controller {
 			 * TODO
 			 */
 			//BeesArraylist = findBees(CharacterArraylistSelected2);
-			BeesArraylist = findBees(CharacterArraylistSelected);
+			BeesArraylist = findBees(CharacterArraylistSelected2);
 			
 			
 			
@@ -448,7 +489,7 @@ public class Application extends Controller {
 		
 		//Instance of the hasKeyCharacteristic object property
 	     OWLObjectProperty hasKeyChar = factory1.getOWLObjectProperty((IRI.create(BeeCharacteristics.getOntologyID()
-	   		  .getOntologyIRI().toString() + "#hasKeyCharacteristic")));
+	   		  .getOntologyIRI().toString() + "#hasDiagnosticFeature")));
  
 	    ArrayList<OWLClass> Arraylist1 = new ArrayList<OWLClass>();
 			//String bees = (info + "   are bee characteristics");

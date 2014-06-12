@@ -42,3 +42,9 @@ Once running, the application should be accessible locally at [http://127.0.0.1:
 The source code can be edited using any standard text editor, and has also been configured to work as an Eclipse Project using the [Eclipse IDE](https://www.eclipse.org).
 
 To open the application in Eclipse, import the project as an existing project, specifying the root directory of the application.
+
+Latest Changes
+Changed from checkboxes to listbox.
+Changed from displaying actual feature names to the annotations.
+Fixed reloading the ontology. (each time its loaded it adds the
+features and repeats them for every reload).

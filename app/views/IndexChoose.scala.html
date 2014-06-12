@@ -1,0 +1,32 @@
+@(message: String)
+
+@import helper._
+
+@main(title = "Web Ontology Viewer") {
+    
+   
+    
+    @form(action = routes.Application.home) {
+   
+   		<h2>Find Bees</h2>
+   
+	     
+	    
+	    <p class="buttonFtoB">
+	        <input type="submit">
+	    </p>
+	    
+	 }   
+	   @form(action = routes.Application.home) {
+   
+   		<h2>Find Diagnostic Features</h2>
+   
+	     
+	    
+	    <p class="buttonBtoF">
+	        <input type="submit">
+	    </p>
+	    
+	 }   
+    
+}
