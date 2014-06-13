@@ -95,7 +95,7 @@ public class Application extends Controller {
     
     
     public static Result home(){
-    	return ok(index.render("woop"));
+    	return ok(index.render(""));
     }
   
     /**
@@ -127,7 +127,7 @@ public class Application extends Controller {
     	  {
     		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
     		
-    		System.out.println("suppp");
+    		//System.out.println("suppp");
     		loadBeeCharacteristics();	
     	  }
     	    
